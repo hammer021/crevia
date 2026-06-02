@@ -1,0 +1,269 @@
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
+import 'package:kmob/common/functions/future.dart';
+import 'package:kmob/common/widgets/MyAppBar.dart';
+import 'package:kmob/model/voucher_model.dart';
+import 'package:kmob/utils/constant.dart';
+
+import 'package:kmob/common/functions/showDialogSingleButton.dart';
+
+class TabListVoucher1Screen extends StatefulWidget {
+  @override
+  _TabListVoucher1ScreenState createState() => _TabListVoucher1ScreenState();
+}
+
+class _TabListVoucher1ScreenState extends State<TabListVoucher1Screen> {
+  String tokens;
+  String saldo = "";
+  String tglUpdate = "";
+  int limit = 10;
+  int count = 0;
+  String _selectedStatus = "";
+  Map<String, dynamic> _voucherData;
+
+  // Data statis
+  List<dynamic> dropdownItems = [];
+
+  bool loading = true;
+
+  @override
+  initState() {
+    super.initState();
+    initAsyncData();
+    setState(() {});
+  }
+
+  initAsyncData() async {
+    var asyncData0 =
+        await getDataVoucher1(context, limit: limit, id_status: '');
+
+    _voucherData = json.decode(asyncData0);
+
+    count = _voucherData['count'];
+
+    var asyncData1 = await getVoucherStatus(context);
+
+    var decodedData1 = json.decode(asyncData1.toString());
+
+    debugPrint(decodedData1.toString());
+
+    dropdownItems = decodedData1;
+
+    loading = false;
+
+    setState(() {});
+  }
+
+  getVoucher() async {
+    setState(() {
+      loading = true;
+    });
+
+    var asyncData0 = await getDataVoucher1(context,
+        limit: limit, id_status: _selectedStatus);
+
+    _voucherData = json.decode(asyncData0);
+
+    count = _voucherData['count'];
+
+    if (count < limit) {
+      limit = count;
+    }
+
+    loading = false;
+
+    setState(() {});
+  }
+
+  void _showPinModal(BuildContext context) {
+    String pin = ""; // Variabel untuk menyimpan PIN
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (BuildContext context) {
+        return Padding(
+          padding: EdgeInsets.only(
+            left: 16,
+            right: 16,
+            bottom: MediaQuery.of(context).viewInsets.bottom + 16,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(height: 16),
+              Text(
+                "Masukkan PIN Anda",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(6, (index) {
+                  return Container(
+                    width: 40,
+                    height: 50,
+                    margin: EdgeInsets.symmetric(horizontal: 4),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Center(
+                      child: Text(
+                        pin.length > index ? pin[index] : "",
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  );
+                }),
+              ),
+              SizedBox(height: 16),
+              TextField(
+                autofocus: true,
+                keyboardType: TextInputType.number,
+                maxLength: 6,
+                obscureText: true,
+                decoration: InputDecoration(
+                  counterText: "",
+                  hintText: "PIN",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                onChanged: (value) {
+                  pin = value;
+                  if (pin.length == 6) {
+                    Navigator.pop(context, pin); // Tutup modal jika PIN selesai
+                  }
+                },
+              ),
+              SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  if (pin.length == 6) {
+                    Navigator.pop(context, pin);
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("PIN harus terdiri dari 6 digit")),
+                    );
+                  }
+                },
+                child: Text("Konfirmasi"),
+              ),
+              SizedBox(height: 16),
+            ],
+          ),
+        );
+      },
+    ).then((result) {
+      if (result != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("PIN Anda: $result")),
+        );
+        // Panggil fungsi getVoucher setelah PIN berhasil dimasukkan
+        getVoucher();
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var listdeposito = Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Text('Status: '),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: DropdownButton<String>(
+                      isExpanded: true,
+                      value: _selectedStatus,
+                      onChanged: (String newValue) {
+                        setState(() {
+                          _selectedStatus = newValue;
+                        });
+                      },
+                      items: [
+                        DropdownMenuItem(
+                          child: Text('SEMUA'),
+                          value: '',
+                        ),
+                        ...dropdownItems.map((item) {
+                          return DropdownMenuItem<String>(
+                            value: item['id'],
+                            child: Text(
+                              item['status'],
+                              style: TextStyle(overflow: TextOverflow.clip),
+                              maxLines: 1,
+                            ),
+                          );
+                        })
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 20),
+              child: ElevatedButton(
+                  onPressed: () {
+                    _showPinModal(context);
+                  },
+                  child: Text('Tampilkan')),
+            ),
+            if (loading) CircularProgressIndicator(),
+            if (!loading && count < 1)
+              Center(
+                child: Text('Data Voucher Tidak Ditemukan'),
+              ),
+            if (!loading)
+              ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: _voucherData['data'].length,
+                  itemBuilder: (context, i) {
+                    VoucherModel listVoucher =
+                        VoucherModel.fromJson(_voucherData['data'][i]);
+
+                    return rowDataVoucher1(
+                        listVoucher, context, (i + 1).toString());
+                  }),
+            if (!loading)
+              if (limit < count)
+                Container(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        limit += 10;
+                        getVoucher();
+                      });
+                    },
+                    child: Text('Load more'),
+                  ),
+                ),
+            SizedBox(
+              height: 20,
+            )
+          ],
+        ),
+      ),
+    );
+
+    return APIConstant.mode == "PROD"
+        ? listdeposito
+        : SizedBox(
+            height: 10,
+          );
+  }
+}

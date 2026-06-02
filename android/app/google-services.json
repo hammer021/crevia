@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "445745229260",
+    "project_id": "kopkarpkt-crevia",
+    "storage_bucket": "kopkarpkt-crevia.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:445745229260:android:935ee723bfe5d26bb30169",
+        "android_client_info": {
+          "package_name": "com.kopkarpkt.crevia"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAE5fSpyJhtK5QelF76CGjzsOdVCEQ5UTo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
