@@ -1262,7 +1262,167 @@ Widget rowDataSetoran2(SetoranModel row, BuildContext context) {
   );
 }
 
-Widget rowDataSimpanan2(Simpanan2Model row, BuildContext context, bool header) {
+Widget rowDataSetoranAng(SetoranModel row, BuildContext context) {
+  return GestureDetector(
+    onTap: () {
+      // Navigator.push(...) bisa diaktifkan kalau perlu
+    },
+    child: Container(
+      decoration: BoxDecoration(
+        color: ColorPalette.grey,
+        borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+      ),
+      margin: const EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
+      padding:
+          const EdgeInsets.only(top: 5.0, bottom: 20.0, left: 5.0, right: 5.0),
+      child: Column(
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    "No referensi : ${row.id}",
+                    textAlign: TextAlign.left,
+                    style: const TextStyle(
+                      fontFamily: "WorkSansMedium",
+                      fontSize: 10.0,
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        "Tanggal Setor : ${formatDate(row.tanggal)}",
+                        style: const TextStyle(
+                          fontFamily: "WorkSansMedium",
+                          fontSize: 12.0,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              badge.Badge(
+                showBadge: true,
+                badgeStyle: badge.BadgeStyle(
+                  badgeColor: row.kodeStatus.toString() == "submit"
+                      ? Colors.blue.shade600
+                      : (row.kodeStatus.toString() == "proses" ||
+                              row.kodeStatus.toString() == "manual")
+                          ? Colors.yellow.shade600
+                          : row.kodeStatus.toString() == "Terverifikasi"
+                              ? Colors.green.shade600
+                              : Colors.red.shade600,
+                  shape: badge.BadgeShape.square,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                badgeAnimation: const badge.BadgeAnimation.fade(
+                  toAnimate: false,
+                ),
+                badgeContent: Text(
+                  row.status.toString(),
+                  style: const TextStyle(
+                    fontFamily: "WorkSansMedium",
+                    fontSize: 10.0,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: const <Widget>[
+              Text(
+                "Nilai : ",
+                style: TextStyle(
+                  fontFamily: "NeoSansBold",
+                  fontSize: 18.0,
+                ),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                formatCurrency(row.nominal),
+                style: const TextStyle(
+                  fontFamily: "NeoSansBold",
+                  fontSize: 25.0,
+                ),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                "No Pinjaman : ${row.no_pinjam}",
+                style: const TextStyle(
+                  fontFamily: "NeoSansBold",
+                  fontSize: 14.0,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                "No Rekening pengirim : ${row.rekening}",
+                style: const TextStyle(
+                  fontFamily: "NeoSans",
+                  fontSize: 12.0,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 5.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                "Bank : ${row.bank}",
+                style: const TextStyle(
+                  fontFamily: "NeoSans",
+                  fontSize: 12.0,
+                ),
+              ),
+            ],
+          ),
+         // Kalau status = Decline, bisa ditampilkan alasan
+          if (row.kodeStatus.toString() == "Decline")
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  "Alasan ditolak : ${row.keterangan}",
+                  style: const TextStyle(
+                    fontFamily: "NeoSans",
+                    fontSize: 12.0,
+                  ),
+                ),
+              ],
+            ),
+        ],
+      ),
+    ),
+  );
+}
+
+Widget rowDataSimpanan2(
+  Simpanan2Model row,
+  BuildContext context,
+  bool header,
+  bool showNilai,
+  Function toggleShowNilai,
+) {
   return GestureDetector(
     onTap: () {
       header
@@ -1305,13 +1465,30 @@ Widget rowDataSimpanan2(Simpanan2Model row, BuildContext context, bool header) {
                 ),
               ],
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            Stack(
+              alignment: Alignment.center,
               children: <Widget>[
-                Text(
-                  formatCurrency(row.jmlSimpanan),
-                  style:
-                      new TextStyle(fontFamily: "NeoSansBold", fontSize: 25.0),
+                Center(
+                  child: Text(
+                    showNilai ? formatCurrency(row.jmlSimpanan) : "********",
+                    style: new TextStyle(
+                      fontFamily: "NeoSansBold",
+                      fontSize: 25.0,
+                    ),
+                  ),
+                ),
+                Positioned(
+                  right: 10,
+                  child: InkWell(
+                    onTap: () {
+                      toggleShowNilai();
+                    },
+                    child: Icon(
+                      showNilai ? Icons.visibility : Icons.visibility_off,
+                      size: 22,
+                      color: ColorPalette.warnaCorporate,
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -1691,7 +1868,12 @@ Widget dataKosong() {
       ));
 }
 
-Widget rowDataPinjaman(PinjamanModel row, BuildContext context) {
+Widget rowDataPinjaman(
+  PinjamanModel row,
+  BuildContext context,
+  bool showNilai,
+  Function toggleShowNilai,
+) {
   return GestureDetector(
     onTap: () {
       Navigator.push(
@@ -1796,14 +1978,29 @@ Widget rowDataPinjaman(PinjamanModel row, BuildContext context) {
               ),
             ],
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+          Stack(
+            alignment: Alignment.center,
             children: <Widget>[
-              Text(
-                formatCurrency(row.jmlPinjam),
-                style: const TextStyle(
-                  fontFamily: "NeoSansBold",
-                  fontSize: 25.0,
+              Center(
+                child: Text(
+                  showNilai ? formatCurrency(row.jmlPinjam) : "********",
+                  style: const TextStyle(
+                    fontFamily: "NeoSansBold",
+                    fontSize: 25.0,
+                  ),
+                ),
+              ),
+              Positioned(
+                right: 10,
+                child: InkWell(
+                  onTap: () {
+                    toggleShowNilai();
+                  },
+                  child: Icon(
+                    showNilai ? Icons.visibility : Icons.visibility_off,
+                    size: 22,
+                    color: ColorPalette.warnaCorporate,
+                  ),
                 ),
               ),
             ],
@@ -1812,7 +2009,7 @@ Widget rowDataPinjaman(PinjamanModel row, BuildContext context) {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
-                "Angsuran ${formatCurrency(row.angsuran)}",
+                "Angsuran ${showNilai ? formatCurrency(row.angsuran) : "********"}",
                 style: const TextStyle(
                   fontFamily: "NeoSansBold",
                   fontSize: 15.0,
@@ -1839,11 +2036,11 @@ Widget rowDataPinjaman(PinjamanModel row, BuildContext context) {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(
-                "Biaya Admin : \n${formatCurrency(row.jmlBiayaAdmin)}",
+               "Biaya Admin : \n${showNilai ? formatCurrency(row.jmlBiayaAdmin) : "********"}",
                 style: const TextStyle(fontFamily: "NeoSans", fontSize: 12.0),
               ),
               Text(
-                "Jumlah Margin : \n${formatCurrency(row.jmlmargin)}",
+                "Jumlah Margin : \n${showNilai ? formatCurrency(row.jmlmargin) : "********"}",
                 style: const TextStyle(fontFamily: "NeoSans", fontSize: 12.0),
               ),
             ],

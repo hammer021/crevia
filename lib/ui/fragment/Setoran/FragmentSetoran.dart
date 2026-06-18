@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kmob/ui/fragment/Setoran/SetoranSS1Screen.dart';
 import 'package:kmob/ui/fragment/Setoran/SetoranSS2Screen.dart';
+import 'package:kmob/ui/fragment/Setoran/SetoranAngsScreen.dart';
 import 'package:kmob/utils/constant.dart';
 
 class FragmentSetoran extends StatefulWidget {
@@ -22,10 +23,11 @@ class SetoranNavigasi {
 
 class _FragmentSetoranState extends State<FragmentSetoran> {
   List<SetoranNavigasi> litems = [
-    SetoranNavigasi(
-        'Setoran Tabungan', 'Penyetoran Ke Tabungan ', "ss1"),
+    SetoranNavigasi('Setoran Tabungan', 'Penyetoran Ke Tabungan ', "ss1"),
     SetoranNavigasi('Setoran Deposito',
         'Penyetoran/pembukaan Simpanan Deposito (Berjangka)', "ss2"),
+    SetoranNavigasi('Setoran Angsuran Pokok Pinjaman',
+        'Penyetoran Angsuran Pokok Pinjaman', "angs"),
   ];
   @override
   void initState() {
@@ -78,7 +80,7 @@ class _FragmentSetoranState extends State<FragmentSetoran> {
       child: ListView.builder(
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
-        itemCount: 2,
+        itemCount: 3,
         itemBuilder: (BuildContext context, int index) {
           SetoranNavigasi setoranNavigasi = litems[index];
           return _makeCard(setoranNavigasi);
@@ -100,6 +102,9 @@ class _FragmentSetoranState extends State<FragmentSetoran> {
             break;
           case "ss2":
             return SetoranSS2Screen();
+            break;
+          case "angs":
+            return SetoranAngsScreen();
             break;
           default:
             return Scaffold(

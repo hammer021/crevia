@@ -10,6 +10,7 @@ class SetoranModel {
   final String jangka;
   final String kodeStatus;
   final String keterangan;
+  final String no_pinjam;
 
   SetoranModel({
     this.id = '',
@@ -23,6 +24,7 @@ class SetoranModel {
     this.jangka = '',
     this.kodeStatus = '',
     this.keterangan = '',
+    this.no_pinjam = '',
   });
 
   factory SetoranModel.fromJson(Map<String, dynamic> json) {
@@ -40,6 +42,7 @@ class SetoranModel {
       jangka: json['jangka']?.toString() ?? '',
       kodeStatus: json['kode_status']?.toString() ?? '',
       keterangan: json['keterangan']?.toString() ?? '',
+      no_pinjam: json['no_pinjam']?.toString() ?? '',
     );
   }
 
@@ -56,6 +59,7 @@ class SetoranModel {
       'jangka': jangka,
       'kode_status': kodeStatus,
       'keterangan': keterangan,
+      'no_pinjam': no_pinjam,
     };
   }
 }

@@ -96,6 +96,7 @@ class _TabSimpananSukarela1State extends State<TabSimpananSukarela1> {
   String? tokens;
   String saldo = "";
   String tglUpdate = "";
+  bool _showSaldo = false;
   List<SimpananAngModel> list = [];
   String urlHeader =
       "" + APIConstant.urlBase + "" + APIConstant.serverApi + "simpanan/ss1";
@@ -163,6 +164,58 @@ class _TabSimpananSukarela1State extends State<TabSimpananSukarela1> {
   }
   //end get data area
 
+  // Card savingHeaderArea() => Card(
+  //       margin: EdgeInsets.all(10.0),
+  //       elevation: 1.0,
+  //       shape: RoundedRectangleBorder(
+  //           borderRadius: BorderRadius.all(Radius.circular(50.0))),
+  //       child: Container(
+  //           decoration: BoxDecoration(
+  //               color: ColorPalette.warnaCorporate,
+  //               borderRadius: new BorderRadius.all(new Radius.circular(20.0))),
+  //           padding: EdgeInsets.all(5.0),
+  //           // color: Color(0xFF015FFF),
+  //           child: Column(
+  //             children: <Widget>[
+  //               SizedBox(
+  //                 height: 30.0,
+  //               ),
+  //               Row(
+  //                 mainAxisAlignment: MainAxisAlignment.center,
+  //                 children: <Widget>[
+  //                   Text("Saldo :",
+  //                       style: TextStyle(
+  //                           color: Colors.white,
+  //                           fontSize: 14.0,
+  //                           fontFamily: "NeoSansBold")),
+  //                 ],
+  //               ),
+  //               Center(
+  //                 child: Padding(
+  //                   padding: EdgeInsets.all(5.0),
+  //                   child: Text(saldo,
+  //                       style: TextStyle(
+  //                           color: Colors.white,
+  //                           fontSize: 24.0,
+  //                           fontFamily: "NeoSans")),
+  //                 ),
+  //               ),
+  //               Center(
+  //                 child: Padding(
+  //                   padding: EdgeInsets.all(5.0),
+  //                   child: Text(
+  //                       "Data diambil pada tgl : " +
+  //                           (tglUpdate == "" ? "" : formatDate(tglUpdate)),
+  //                       style: TextStyle(
+  //                           color: Colors.white,
+  //                           fontSize: 12.0,
+  //                           fontFamily: "NeoSanslight")),
+  //                 ),
+  //               ),
+  //               SizedBox(height: 20.0),
+  //             ],
+  //           )),
+  //     );
   Card savingHeaderArea() => Card(
         margin: EdgeInsets.all(10.0),
         elevation: 1.0,
@@ -173,42 +226,71 @@ class _TabSimpananSukarela1State extends State<TabSimpananSukarela1> {
                 color: ColorPalette.warnaCorporate,
                 borderRadius: new BorderRadius.all(new Radius.circular(20.0))),
             padding: EdgeInsets.all(5.0),
-            // color: Color(0xFF015FFF),
             child: Column(
               children: <Widget>[
-                SizedBox(
-                  height: 30.0,
-                ),
+                SizedBox(height: 30.0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Text("Saldo :",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 14.0,
-                            fontFamily: "NeoSansBold")),
+                    Text(
+                      "Saldo :",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14.0,
+                        fontFamily: "NeoSansBold",
+                      ),
+                    ),
                   ],
                 ),
                 Center(
                   child: Padding(
                     padding: EdgeInsets.all(5.0),
-                    child: Text(saldo,
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 24.0,
-                            fontFamily: "NeoSans")),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Center(
+                          child: Text(
+                            _showSaldo ? saldo : "********",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 24.0,
+                              fontFamily: "NeoSans",
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          right: 15,
+                          child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                _showSaldo = !_showSaldo;
+                              });
+                            },
+                            child: Icon(
+                              _showSaldo
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                              color: Colors.white,
+                              size: 22,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 Center(
                   child: Padding(
                     padding: EdgeInsets.all(5.0),
                     child: Text(
-                        "Data diambil pada tgl : " +
-                            (tglUpdate == "" ? "" : formatDate(tglUpdate)),
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12.0,
-                            fontFamily: "NeoSanslight")),
+                      "Data diambil pada tgl : " +
+                          (tglUpdate == "" ? "" : formatDate(tglUpdate)),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 12.0,
+                        fontFamily: "NeoSanslight",
+                      ),
+                    ),
                   ),
                 ),
                 SizedBox(height: 20.0),
@@ -351,7 +433,7 @@ class _TabSimpananSukarela1State extends State<TabSimpananSukarela1> {
             child: new Column(
               children: <Widget>[
                 savingHeaderArea(),
-                savingDetailArea,
+                _showSaldo ? savingDetailArea : SizedBox(),
               ],
             )),
       ],

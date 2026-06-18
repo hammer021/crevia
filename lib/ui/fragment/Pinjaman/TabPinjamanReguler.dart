@@ -17,6 +17,7 @@ class _TabPinjamanRegulerState extends State<TabPinjamanReguler> {
   late String tokens;
   String saldo = "";
   String tglUpdate = "";
+  bool _showNilaiPinjaman = false;
   List<PinjamanModel> list = [];
   String selectedStatus = 'Semua';
   String url = APIConstant.urlBase + APIConstant.serverApi + "pinjaman/reg3";
@@ -126,7 +127,16 @@ class _TabPinjamanRegulerState extends State<TabPinjamanReguler> {
                         return Column(
                             children: snapshot.data!.map<Widget>((data) {
                           i = i++;
-                          return rowDataPinjaman(data, context);
+                          return rowDataPinjaman(
+                            data,
+                            context,
+                            _showNilaiPinjaman,
+                            () {
+                              setState(() {
+                                _showNilaiPinjaman = !_showNilaiPinjaman;
+                              });
+                            },
+                          );
                         }).toList());
                       }
                       return Center(

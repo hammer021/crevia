@@ -16,6 +16,7 @@ class _TabPinjamanKKBState extends State<TabPinjamanKKB> {
   String saldo = "";
   String tglUpdate = "";
   List<PinjamanModel> list = [];
+  bool _showNilaiPinjaman = false;
   String selectedStatus = 'Semua';
   String url = APIConstant.urlBase + APIConstant.serverApi + "pinjaman/kkb";
   Map<String, String> get headers => {
@@ -125,7 +126,16 @@ class _TabPinjamanKKBState extends State<TabPinjamanKKB> {
                         return Column(
                             children: snapshot.data!.map<Widget>((data) {
                           i = i++;
-                          return rowDataPinjaman(data, context);
+                          return rowDataPinjaman(
+                            data,
+                            context,
+                            _showNilaiPinjaman,
+                            () {
+                              setState(() {
+                                _showNilaiPinjaman = !_showNilaiPinjaman;
+                              });
+                            },
+                          );
                         }).toList());
                       }
                       return Center(

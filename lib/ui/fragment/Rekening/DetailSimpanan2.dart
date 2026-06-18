@@ -14,6 +14,7 @@ class DetailSimpanan2 extends StatefulWidget {
 
 class _DetailSimpanan2State extends State<DetailSimpanan2> {
   String? noSS2;
+  bool _showNilaiSS2 = false;
 
   Card headerArea() => Card(
         margin: EdgeInsets.all(10.0),
@@ -75,7 +76,17 @@ class _DetailSimpanan2State extends State<DetailSimpanan2> {
                         return new Column(
                             children: snapshot.data!.map<Widget>((data) {
                           i = i++;
-                          return rowDataSimpanan2(data, context, false);
+                          return rowDataSimpanan2(
+                            data,
+                            context,
+                            true,
+                            _showNilaiSS2,
+                            () {
+                              setState(() {
+                                _showNilaiSS2 = !_showNilaiSS2;
+                              });
+                            },
+                          );
                         }).toList());
                       }
                       return Center(

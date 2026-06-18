@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:kmob/common/functions/future.dart';
 import 'package:kmob/common/widgets/MyAppBar.dart';
+import 'package:kmob/model/setoran_model.dart';
 
-class TabSimpananSukarela2 extends StatefulWidget {
+class TabListSetoranAngsuranScreen extends StatefulWidget {
   @override
-  _TabSimpananSukarela2State createState() => _TabSimpananSukarela2State();
+  _TabListSetoranAngsuranScreenState createState() =>
+      _TabListSetoranAngsuranScreenState();
 }
 
-class _TabSimpananSukarela2State extends State<TabSimpananSukarela2> {
-  bool _showNilaiSS2 = false;
+class _TabListSetoranAngsuranScreenState
+    extends State<TabListSetoranAngsuranScreen> {
+  String? tokens;
+  String saldo = "";
+  String tglUpdate = "";
+  List<SetoranModel> list = [];
   @override
   Widget build(BuildContext context) {
     var listdeposito = Container(
@@ -16,32 +22,18 @@ class _TabSimpananSukarela2State extends State<TabSimpananSukarela2> {
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              new Text(
-                "Simpanan Deposito :",
-                style: new TextStyle(fontFamily: "NeoSansBold"),
-              ),
               new Container(
                 margin: EdgeInsets.all(10.0),
                 child: Column(children: <Widget>[
                   FutureBuilder(
-                    future: getDataSimpanan2(context, true),
+                    future: getDataSetoranAng(context),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         int i = 0;
                         return new Column(
                             children: snapshot.data!.map<Widget>((data) {
                           i = i++;
-                          return rowDataSimpanan2(
-                            data,
-                            context,
-                            true,
-                            _showNilaiSS2,
-                            () {
-                              setState(() {
-                                _showNilaiSS2 = !_showNilaiSS2;
-                              });
-                            },
-                          );
+                          return rowDataSetoranAng(data, context);
                         }).toList());
                       }
                       return Center(

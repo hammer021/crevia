@@ -7,6 +7,7 @@ import 'package:kmob/common/functions/format.dart';
 import 'package:kmob/common/platform/platformScaffold.dart';
 import 'package:kmob/common/widgets/MyAppBar.dart';
 import 'package:kmob/model/bank_model.dart';
+import 'package:kmob/model/pinjaman_model.dart';
 import 'package:kmob/model/profile_model.dart';
 import 'package:kmob/ui/fragment/Setoran/UploadBerhasilScreen.dart';
 import 'package:kmob/utils/constant.dart';
@@ -22,6 +23,7 @@ class UploadSetoranScreen extends StatefulWidget {
   final String? simpanan;
   final double? nominal;
   final String? jangka;
+  final PinjamanModel? pinjaman;
 
   const UploadSetoranScreen(
       {Key? key,
@@ -29,8 +31,9 @@ class UploadSetoranScreen extends StatefulWidget {
       this.nama,
       this.rekening,
       this.nominal,
-      this.jangka,
-      this.simpanan})
+      this.jangka,      
+      this.simpanan,
+      this.pinjaman})
       : super(key: key);
 
   @override
@@ -244,6 +247,9 @@ class _UploadSetoranScreenState extends State<UploadSetoranScreen> {
       case "Deposito":
         simpanan = "SS2";
         break;
+      case "Angsuran":
+        simpanan = "ANGS";
+        break;
       default:
         break;
     }
@@ -255,7 +261,10 @@ class _UploadSetoranScreenState extends State<UploadSetoranScreen> {
       'bukti': _bukti ?? '',
       'nama': widget.nama ?? '',
       'simpanan': simpanan,
-      'jangka': widget.jangka ?? ''
+      'jangka': widget.jangka ?? '',
+      'no_pinjam': widget.pinjaman?.noPinjam ?? '',
+
+      
     };
 
     final prefs = await SharedPreferences.getInstance();
@@ -410,9 +419,9 @@ class _UploadSetoranScreenState extends State<UploadSetoranScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Text("Tipe Simpanan"),
+                  Text("Tipe"),
                   Text(
-                    "Simpanan " + (widget.simpanan ?? ''),
+                   (widget.simpanan ?? ''),
                     style: TextStyle(fontFamily: "NeoSansBold"),
                   )
                 ],

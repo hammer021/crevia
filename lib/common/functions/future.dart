@@ -403,3 +403,24 @@ Future<List<SetoranModel>> getDataSetoran2(BuildContext context) async {
   }
   return list;
 }
+Future<List<SetoranModel>> getDataSetoranAng(BuildContext context) async {
+  List<SetoranModel> list = [];
+
+  String url = "" +
+      APIConstant.urlBase +
+      "" +
+      APIConstant.serverApi +
+      "Setoran/ss1?simpanan=ANGS";
+  final prefs = await SharedPreferences.getInstance();
+  tokens = prefs.getString('LastToken') ?? '';
+  final response = await http.get(Uri.parse(url), headers: headers);
+  if (response.statusCode == 200) {
+    var rest = json.decode(response.body) as List;
+    list =
+        rest.map<SetoranModel>((json) => SetoranModel.fromJson(json)).toList();
+  } else if (response.statusCode == 204) {
+  } else if (response.statusCode == 401) {
+    Navigator.of(context).pushReplacementNamed('/LoginScreen');
+  }
+  return list;
+}

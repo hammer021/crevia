@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kmob/ui/fragment/ListSetoran/TabListSetoranSukarela1Screen.dart';
 import 'package:kmob/ui/fragment/ListSetoran/TabListSetoranSukarela2Screen.dart';
+import 'package:kmob/ui/fragment/ListSetoran/TabListSetoranAngsuranScreen.dart';
 import 'package:kmob/utils/constant.dart';
 
 class FragmentListSetoran extends StatefulWidget {
@@ -20,6 +21,7 @@ class _FragmentListSetoranState extends State<FragmentListSetoran>
   final List<Tab> myTabs = <Tab>[
     Tab(text: 'Tabungan'),
     Tab(text: 'Deposito'),
+    Tab(text: 'Angsuran'),
   ];
   @override
   void dispose() {
@@ -54,6 +56,7 @@ class _FragmentListSetoranState extends State<FragmentListSetoran>
           children: <Widget>[
             new TabListSetoranSukarela1Screen(),
             new TabListSetoranSukarela2Screen(),
+            new TabListSetoranAngsuranScreen(),
           ],
         ),
       ),

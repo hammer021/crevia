@@ -1524,7 +1524,7 @@ class _PengajuanPinjamanState extends State<PengajuanPinjaman> {
                           icon: Icon(FontAwesomeIcons.moneyCheck,
                               color: Colors.blue),
                           errorText: _errorTextNoRek,
-                          counterText: "No Rekening Harus BNI",
+                          counterText: "No Rekening Harus Mandiri",
                           counterStyle: TextStyle(
                             color: Colors.red, // warna merah
                             fontWeight:
@@ -1550,7 +1550,7 @@ class _PengajuanPinjamanState extends State<PengajuanPinjaman> {
                                   tombolIjo(
                                     onPressed: () async {
                                       const url =
-                                          'http://35.197.136.216/asset/MEMO_PINJAMAN_ONLINE.pdf'; // ganti dengan URL file Anda
+                                          'http://72.62.124.25:8090/assets/MEMO_PINJAMAN_ONLINE.pdf'; // ganti dengan URL file Anda
                                       if (await canLaunchUrl(Uri.parse(url))) {
                                         await launchUrl(
                                           Uri.parse(url),

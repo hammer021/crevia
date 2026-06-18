@@ -38,6 +38,7 @@ class _HomeSummaryHeadState extends State<HomeSummaryHead> {
   double plafonPakai = 0;
   double plafonSisa = 0;
   bool isData = false;
+  bool _showTotalWajib = false;
   double point = 0;
   double redeem = 0;
   double yourpoint = 0;
@@ -176,7 +177,9 @@ class _HomeSummaryHeadState extends State<HomeSummaryHead> {
                                 ),
                               ),
                               Text(
-                                formatCurrency(total_swajib),
+                                _showTotalWajib
+                                    ? formatCurrency(total_swajib)
+                                    : "********",
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -187,42 +190,20 @@ class _HomeSummaryHeadState extends State<HomeSummaryHead> {
                           ),
                         ],
                       ),
-                      // InkWell(
-                      //   onTap: () {
-                      //     Navigator.push(
-                      //       context,
-                      //       MaterialPageRoute(
-                      //         builder: (context) =>
-                      //             PointDetail(profile: profile!),
-                      //       ),
-                      //     );
-                      //   },
-                      //   child: Container(
-                      //     padding:
-                      //         EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                      //     decoration: BoxDecoration(
-                      //       color: ColorPalette.warnaCorporate,
-                      //       borderRadius: BorderRadius.circular(8),
-                      //     ),
-                      //     child: Row(
-                      //       children: [
-                      //         Text(
-                      //           "More",
-                      //           style: TextStyle(
-                      //             color: Colors.white,
-                      //             fontWeight: FontWeight.bold,
-                      //           ),
-                      //         ),
-                      //         SizedBox(width: 4),
-                      //         Icon(
-                      //           Icons.arrow_forward_ios,
-                      //           color: Colors.white,
-                      //           size: 12,
-                      //         )
-                      //       ],
-                      //     ),
-                      //   ),
-                      // )
+                      IconButton(
+                        onPressed: () {
+                          setState(() {
+                            _showTotalWajib = !_showTotalWajib;
+                          });
+                        },
+                        icon: Icon(
+                          _showTotalWajib
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: ColorPalette.warnaCorporate,
+                          size: 24,
+                        ),
+                      ),
                     ],
                   ),
                 ),
